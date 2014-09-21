@@ -1,8 +1,27 @@
-DemoApp::Application.routes.draw do
-  resources :microposts
+SampleApp::Application.routes.draw do
+
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
 
   resources :users
+  resources :sessions,      only: [:new, :create, :destroy]
+  resources :microposts,    only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
 
+
+  root  'static_pages#home'
+  match '/signup',  to: 'users#new',            via: 'get'
+  match '/signin',  to: 'sessions#new',         via: 'get'
+  match '/signout', to: 'sessions#destroy',     via: 'delete'
+
+  match '/help',    to: 'static_pages#help',    via: 'get'
+  match '/about',   to: 'static_pages#about',   via: 'get'
+  match '/contact', to: 'static_pages#contact', via: 'get'
+  
+ 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -29,6 +48,9 @@ DemoApp::Application.routes.draw do
   #       get 'sold'
   #     end
   #   end
+
+  # You can have the root of your site routed with "root"
+  # root 'welcome#index
 
   # Example resource route with sub-resources:
   #   resources :products do
